@@ -4,6 +4,8 @@ require('dotenv').config();
 const connectDB = require('./db/connect');
 const User = require('./models/User');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
+
 
 const app = express()
 const port = 3000
@@ -25,7 +27,9 @@ app.post('/register', async (req, res) => {
   console.log("reach here" , creds);
   console.log("registering with details" , creds);
   const usr_obj = await User.create(creds)
-  res.status(201).json({usr_obj});
+  const token = await jwt.sign({userId: usr_obj._id}, process.env.JWT_SECRET)
+  res.cookie('token', token).status(201).json({id: usr_obj._id}); 
+  // res.status(201).json({usr_obj});
 })
 
 
