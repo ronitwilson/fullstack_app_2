@@ -20,7 +20,6 @@ app.use(express.json());
 app.use(cookieParser())
 
 app.get('/profile', async (req, res) => {
-  console.log('profile route')
   const token = req.cookies.token;
   if(!token) {
     res.status(401).json({message: 'Unauthorized'});
@@ -32,7 +31,8 @@ app.get('/profile', async (req, res) => {
     } else {
       const userId = decoded.userId;
       const username = decoded.username;
-      res.status(200).json({username});
+      console.log("username is ", username, "userId is ", userId)
+      res.status(200).json({decoded});
     }
 })
 })
@@ -49,7 +49,7 @@ app.post('/register', async (req, res) => {
   console.log("registering with details" , creds);
   const usr_obj = await User.create(creds)
   const token = await jwt.sign({userId: usr_obj._id, username: usr_obj.username}, process.env.JWT_SECRET)
-  res.cookie('token', token).status(201).json({id: usr_obj._id}); 
+  res.cookie('token', token, {sameSite:'none',secure:true}).status(201).json({id: usr_obj._id}); 
   // res.status(201).json({usr_obj});
 })
 
