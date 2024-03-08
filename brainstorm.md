@@ -14,8 +14,15 @@ Will cookie be used in IOT case ?
 
 
 
-
 # My todo wishes
 * configure nodemon to start backend
 * implement the hashed password save in the mongo db
 * check if there is a way to clear the mongo db table
+
+# Missing knowledge
+* How is the usestate method in the Usercontext working
+
+# Next steps
+* march 3  1.6.1 in video
+    * further set the username and id in the user context
+    * set login link
