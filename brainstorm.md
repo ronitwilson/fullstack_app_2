@@ -26,3 +26,7 @@ Will cookie be used in IOT case ?
 * march 3  1.6.1 in video
     * further set the username and id in the user context
     * set login link
+
+
+# Betterment thoughts
+* app currently routes "/" to registerAndLogin router, want to refactor this

@@ -2,10 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const connectDB = require('./db/connect');
-const User = require('./models/User');
+// const User = require('./models/User');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const registerAndlogin = require('./router/registerAndLogin');
 
 
 const app = express()
@@ -37,21 +38,21 @@ app.get('/profile', async (req, res) => {
 })
 })
 
-// app.get('/', (req, res) => {
-//   // console.log('get route')
-//   res.send('Hello World!')
-// })
-
-app.post('/register', async (req, res) => {
-  const {username, password} = req.body;
-  const creds = {username, password};
-  console.log("reach here" , creds);
-  console.log("registering with details" , creds);
-  const usr_obj = await User.create(creds)
-  const token = await jwt.sign({userId: usr_obj._id, username: usr_obj.username}, process.env.JWT_SECRET)
-  res.cookie('token', token, {sameSite:'none',secure:true}).status(201).json({id: usr_obj._id}); 
-  // res.status(201).json({usr_obj});
+app.get('/', (req, res) => {
+  // console.log('get route')
+  res.send('Hello World!')
 })
+app.use("/", registerAndlogin);
+// app.post('/register', async (req, res) => {
+//   const {username, password} = req.body;
+//   const creds = {username, password};
+//   console.log("reach here" , creds);
+//   console.log("registering with details" , creds);
+//   const usr_obj = await User.create(creds)
+//   const token = await jwt.sign({userId: usr_obj._id, username: usr_obj.username}, process.env.JWT_SECRET)
+//   res.cookie('token', token, {sameSite:'none',secure:true}).status(201).json({id: usr_obj._id}); 
+//   // res.status(201).json({usr_obj});
+// })
 
 
 app.listen(port, () => {
