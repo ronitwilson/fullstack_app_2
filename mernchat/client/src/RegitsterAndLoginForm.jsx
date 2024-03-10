@@ -3,15 +3,16 @@ import { useState} from 'react'
 import { useContext } from 'react'
 import { UserContext } from "./UserContext.jsx"
 
-export default function Register() {
+export default function RegitsterAndLoginForm() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [isloginOrRegister, setIsloginOrRegister] = useState('register')
     const {setUsername:setLoggedInUsername, setId} = useContext(UserContext);
 
-    async function  register(ev) {
+    async function  handleSubmit(ev) {
         ev.preventDefault()
-        const response = await axios.post('/register', {username, password})
+        const url = isloginOrRegister === 'register' ? '/register' : '/login'
+        const response = await axios.post(url, {username, password})
         console.log("response id ", response.data.id)
         setId(response.data.id)
         setLoggedInUsername(username)
@@ -19,7 +20,7 @@ export default function Register() {
 
     return(
         <div className="bg-blue-50 h-screen flex items-center" >
-            <form className="w-64 mx-auto mb-12" onSubmit={register}>
+            <form className="w-64 mx-auto mb-12" onSubmit={handleSubmit}>
             <input type="text" placeholder="Username" 
                 value={username}
                 onChange={ev => setUsername(ev.target.value)} 

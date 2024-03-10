@@ -1,4 +1,4 @@
-import Register from './Register'
+import RegitsterAndLoginForm from './RegitsterAndLoginForm'
 import { UserContext } from './UserContext'
 import { useContext } from 'react'
 
@@ -10,7 +10,7 @@ function Routes() {
         return 'logged in as ' + username + ' with id ' + id 
     }
     return (
-        <Register />
+        <RegitsterAndLoginForm />
     );
 }
 
