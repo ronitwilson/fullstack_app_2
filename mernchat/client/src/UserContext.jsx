@@ -10,9 +10,10 @@ export function UserContextProvider({children}) {
     useEffect(() => {
         console.log("fetching profile")
         axios.get('/profile').then(response => {
-            console.log("username is ", response.data.username)
-            setId(response.data.id)
-            setUsername(response.data.username)
+            console.log("username is ", response.data)
+            console.log("username is ", response.data.decoded.username)
+            setId(response.data.decoded.id)
+            setUsername(response.data.decoded.username)
         });
     }, [])
     return (
