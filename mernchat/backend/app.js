@@ -7,6 +7,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const registerAndlogin = require('./router/registerAndLogin');
+const ws = require('ws');
 
 
 const app = express()
@@ -55,7 +56,7 @@ app.use("/", registerAndlogin);
 // })
 
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
@@ -68,3 +69,5 @@ const start = async () => {
     }
   }
 start()
+
+const wss = new ws.WebSocketServer({ server });
