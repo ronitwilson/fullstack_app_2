@@ -1,4 +1,9 @@
+import { useEffect } from "react"
+
 export default function Chat() {
+    useEffect(() => {
+        new WebSocket("ws://localhost:3000")
+    }, [])
     return(
         <div className="flex h-screen">
             <div className="bg-blue-80 w-1/3">People</div>

@@ -44,21 +44,17 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 app.use("/", registerAndlogin);
-// app.post('/register', async (req, res) => {
-//   const {username, password} = req.body;
-//   const creds = {username, password};
-//   console.log("reach here" , creds);
-//   console.log("registering with details" , creds);
-//   const usr_obj = await User.create(creds)
-//   const token = await jwt.sign({userId: usr_obj._id, username: usr_obj.username}, process.env.JWT_SECRET)
-//   res.cookie('token', token, {sameSite:'none',secure:true}).status(201).json({id: usr_obj._id}); 
-//   // res.status(201).json({usr_obj});
-// })
-
 
 const server = app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
+
+const wss = new ws.WebSocketServer({ server });
+// console.log('wss is ', wss)
+wss.on('connection', (ws) => {
+  console.log('new ws connection');
+})
+
 
 const start = async () => {
     try {
@@ -69,5 +65,3 @@ const start = async () => {
     }
   }
 start()
-
-const wss = new ws.WebSocketServer({ server });
