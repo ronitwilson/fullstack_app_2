@@ -51,8 +51,9 @@ const server = app.listen(port, () => {
 
 const wss = new ws.WebSocketServer({ server });
 // console.log('wss is ', wss)
-wss.on('connection', (ws) => {
+wss.on('connection', (connection) => {
   console.log('new ws connection');
+  connection.send("hello from server");
 })
 
 

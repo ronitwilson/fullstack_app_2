@@ -30,3 +30,8 @@ Will cookie be used in IOT case ?
 
 # Betterment thoughts
 * app currently routes "/" to registerAndLogin router, want to refactor this
+
+# march 12 next steps
+* save ws in use state
+* add event listner for message
+* test using cooonection.send('hello')
