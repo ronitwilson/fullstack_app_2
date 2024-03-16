@@ -35,3 +35,7 @@ Will cookie be used in IOT case ?
 * save ws in use state
 * add event listner for message
 * test using cooonection.send('hello')
+
+# marck 16 next steps
+* 18:08 -> show people in frontend
+* 18:50 -> use avartar

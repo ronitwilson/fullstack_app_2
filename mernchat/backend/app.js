@@ -67,7 +67,7 @@ wss.on('connection', (connection, req) => {
   }
   // const unique_user_names = [];
   [...wss.clients].forEach(client => {
-    client.send(JSON.stringify([...wss.clients].map(c => ({userId: c.userId, username : c.username}))))
+    client.send(JSON.stringify({online:   [...wss.clients].map(c => ({userId: c.userId, username : c.username}))}))
     // console.log('element is ', client.username)
     // append the username to the list of unique_user_names if it is not already there
     // if(!unique_user_names.includes(element.username)) {
