@@ -6,8 +6,12 @@ export default function Chat() {
     useEffect(() => {
         const ws = new WebSocket("ws://localhost:3000")
         setWs(ws)
-        ws.addEventListener('message',() => {
+
+        ws.addEventListener('message',(event) => {
             console.log("message received")
+            console.log(event.data)
+            // print the message in console
+
         })
     }, [])
     return(

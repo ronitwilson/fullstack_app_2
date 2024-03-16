@@ -51,9 +51,30 @@ const server = app.listen(port, () => {
 
 const wss = new ws.WebSocketServer({ server });
 // console.log('wss is ', wss)
-wss.on('connection', (connection) => {
+wss.on('connection', (connection, req) => {
   console.log('new ws connection');
-  connection.send("hello from server");
+  const cookies = req.headers.cookie;
+  if (cookies) {
+    const token = cookies.split(';').find(str => str.startsWith('token=')).split('=')[1];
+    jwt.verify(token, process.env.JWT_SECRET, (err, userDetails) => {
+      if(err) {
+        console.log('error in verifying token', err);
+      } else {
+        connection.userId = userDetails.userId;
+        connection.username = userDetails.username;
+      }
+    })
+  }
+  // const unique_user_names = [];
+  [...wss.clients].forEach(client => {
+    client.send(JSON.stringify([...wss.clients].map(c => ({userId: c.userId, username : c.username}))))
+    // console.log('element is ', client.username)
+    // append the username to the list of unique_user_names if it is not already there
+    // if(!unique_user_names.includes(element.username)) {
+    //   unique_user_names.push(element.username);
+    // }
+  });
+  // console.log([...wss.clients].map(c => c.username))
 })
 
 
