@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { useEffect } from "react"
+import  Avatar from "./Avatar"
 
 export default function Chat() {
     const [ws, setWs] = useState(null)
@@ -35,7 +36,10 @@ export default function Chat() {
             <div className="bg-blue-80 w-1/3">
                 <div className="text-blue-600 font-bold">MernChat</div>
                 {Object.keys(people).map(userId => (
-                    <div key={userId} className="border-b border-gray-100 py-2">{people[userId]}</div>
+                    <div key={userId} className="border-b border-gray-100 py-2 flex items-center gap-2">
+                        <Avatar username={people[userId]} userId={userId}/>
+                        <span>{people[userId]}</span>
+                        </div>
                 ))
                     }
             </div>
