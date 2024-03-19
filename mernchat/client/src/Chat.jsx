@@ -46,15 +46,25 @@ export default function Chat() {
                 <div className="text-blue-600 font-bold">MernChat</div>
                 {
                 Object.keys(otherOnlinePeople).map(userId => (
-                    <div onClick={() => setSelectedUserId(userId)} key={userId} className={"border-b border-gray-100 py-2 pl-4 flex items-center gap-2 " + (userId === selectedUserId ? 'bg-blue-100': '')}>
+                    <div onClick={() => setSelectedUserId(userId)} key={userId} className={"border-b border-gray-100 flex items-center gap-2 " + (userId === selectedUserId ? 'bg-blue-100': '')}>
+                        {userId === selectedUserId && (
+                            <div className="bg-blue-500 w-1 h-12 "></div>
+                        )}
+                        <div className="flex gap-2 py-2 pl-4 items-center ">
                         <Avatar username={people[userId]} userId={userId}/>
                         <span>{people[userId]}</span>
+                        </div>
                         </div>
                 ))
                 }
             </div>
             <div className="flex flex-col bg-blue-200 w-2/3">
-                <div className="flex-grow p-2"> messages with selected person</div>
+                <div className="flex-grow p-2"> {selectedUserId &&<span>messages with {people[selectedUserId]}</span> } 
+                {!selectedUserId && (
+                    <div className="text-center text-gray-500">Select a person to chat with</div>
+                )}
+                
+                </div>
                 <div className="flex gap-2 p-2">
                     <input type="text" placeholder="type a message" className="bg-white border p-2 flex-grow rounded-sm" />
                     <button className="bg-blue-500 p-2 m-2 text-white rounded-sm">Send</button>
