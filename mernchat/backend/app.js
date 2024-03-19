@@ -52,7 +52,6 @@ const server = app.listen(port, () => {
 const wss = new ws.WebSocketServer({ server });
 // console.log('wss is ', wss)
 wss.on('connection', (connection, req) => {
-  console.log('new ws connection');
   const cookies = req.headers.cookie;
   if (cookies) {
     const token = cookies.split(';').find(str => str.startsWith('token=')).split('=')[1];

@@ -1,11 +1,15 @@
 import React, { useState } from "react"
 import { useEffect } from "react"
 import  Avatar from "./Avatar"
+import { UserContext } from './UserContext'
+import { useContext } from 'react'
 
 export default function Chat() {
     const [ws, setWs] = useState(null)
     const [people, setPeople] = useState({})
     const [selectedUserId, setSelectedUserId] = useState(null)
+    const {username, id} = useContext(UserContext)
+
     useEffect(() => {
         const ws = new WebSocket("ws://localhost:3000")
         setWs(ws)
@@ -32,17 +36,22 @@ export default function Chat() {
             }
         }
     }, [])
+
+    const otherOnlinePeople = {...people};
+    console.log("otherOnlinePeople are ", otherOnlinePeople)
+    delete otherOnlinePeople[id];
     return(
         <div className="flex h-screen">
             <div className="bg-blue-80 w-1/3">
                 <div className="text-blue-600 font-bold">MernChat</div>
-                {Object.keys(people).map(userId => (
+                {
+                Object.keys(otherOnlinePeople).map(userId => (
                     <div onClick={() => setSelectedUserId(userId)} key={userId} className={"border-b border-gray-100 py-2 pl-4 flex items-center gap-2 " + (userId === selectedUserId ? 'bg-blue-100': '')}>
                         <Avatar username={people[userId]} userId={userId}/>
                         <span>{people[userId]}</span>
                         </div>
                 ))
-                    }
+                }
             </div>
             <div className="flex flex-col bg-blue-200 w-2/3">
                 <div className="flex-grow p-2"> messages with selected person</div>
