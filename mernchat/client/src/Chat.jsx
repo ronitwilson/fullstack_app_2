@@ -8,6 +8,7 @@ export default function Chat() {
     const [ws, setWs] = useState(null)
     const [people, setPeople] = useState({})
     const [selectedUserId, setSelectedUserId] = useState(null)
+    const [message, setMessage] = useState('')
     const {username, id} = useContext(UserContext)
 
     useEffect(() => {
@@ -30,15 +31,24 @@ export default function Chat() {
 
         function handleWsMessage(ev) {
             const messageData = JSON.parse(ev.data)
-            console.log("messageData is ", messageData)
+            // console.log("messageData is ", messageData)
             if ('online' in messageData) {
                 showOnlinePeople(messageData.online)
             }
         }
+        
     }, [])
 
+    function sendMessage(ev) {
+        ev.preventDefault()
+        console.log(" !!message is " ,message)
+        // ws.send(JSON.stringify({
+        //     to: selectedUserId,
+        //     message
+        // }))
+    }
     const otherOnlinePeople = {...people};
-    console.log("otherOnlinePeople are ", otherOnlinePeople)
+    // console.log("otherOnlinePeople are ", otherOnlinePeople)
     delete otherOnlinePeople[id];
     return(
         <div className="flex h-screen">
@@ -63,12 +73,16 @@ export default function Chat() {
                 {!selectedUserId && (
                     <div className="text-center text-gray-500">Select a person to chat with</div>
                 )}
-                
-                </div>
-                <div className="flex gap-2 p-2">
-                    <input type="text" placeholder="type a message" className="bg-white border p-2 flex-grow rounded-sm" />
-                    <button className="bg-blue-500 p-2 m-2 text-white rounded-sm">Send</button>
-                </div>
+            </div>
+                {!! selectedUserId && (
+                    <form className="flex gap-2 p-2 "  onSubmit={sendMessage}>
+                    <input type="text" 
+                    onChange={ev => {setMessage(ev.target.value)}}
+                    placeholder="type a message" 
+                    className="bg-white border p-2 flex-grow rounded-sm" />
+                    <button type="submit" className="bg-blue-500 p-2 m-2 text-white rounded-sm">Send</button>
+                </form>  
+                )}
             </div>
         </div>
     )
