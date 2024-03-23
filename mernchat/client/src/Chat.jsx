@@ -31,9 +31,13 @@ export default function Chat() {
 
         function handleWsMessage(ev) {
             const messageData = JSON.parse(ev.data)
-            // console.log("messageData is ", messageData)
+            console.log("ws connection message ", messageData)
             if ('online' in messageData) {
                 showOnlinePeople(messageData.online)
+            }
+            else{
+                console.log("other message data is ", messageData)
+            
             }
         }
         
@@ -42,10 +46,10 @@ export default function Chat() {
     function sendMessage(ev) {
         ev.preventDefault()
         console.log(" !!message is " ,message)
-        // ws.send(JSON.stringify({
-        //     to: selectedUserId,
-        //     message
-        // }))
+        ws.send(JSON.stringify({
+            recipient: selectedUserId,
+            text: message
+        }))
     }
     const otherOnlinePeople = {...people};
     // console.log("otherOnlinePeople are ", otherOnlinePeople)

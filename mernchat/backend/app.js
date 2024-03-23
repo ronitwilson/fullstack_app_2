@@ -53,6 +53,8 @@ const wss = new ws.WebSocketServer({ server });
 // console.log('wss is ', wss)
 wss.on('connection', (connection, req) => {
   const cookies = req.headers.cookie;
+
+  // read user name and pwd
   if (cookies) {
     const token = cookies.split(';').find(str => str.startsWith('token=')).split('=')[1];
     jwt.verify(token, process.env.JWT_SECRET, (err, userDetails) => {
@@ -64,13 +66,32 @@ wss.on('connection', (connection, req) => {
       }
     })
   }
-  // const unique_user_names = [];
+  connection.on('message', (message) => {
+    message = JSON.parse(message.toString())
+    console.log('message is ', message)
+    const {recipient, text} = message;
+    if(recipient && text) {
+      [...wss.clients].filter(client => client.userId === recipient)
+      .forEach(client => {
+        client.send(JSON.stringify({text}))
+      })
+    }
+    // wss.clients.forEach(client => {
+    //   if(client !== connection) {
+    //     client.send(message);
+    //   }
+    // })
+  });
+  // notify when someone comments
   [...wss.clients].forEach(client => {
     client.send(JSON.stringify({online:   [...wss.clients].map(c => ({userId: c.userId, username : c.username}))}))
   });
   // console.log([...wss.clients].map(c => c.username))
 })
 
+// wss.on('message', (message) => {
+//   console.log('message is ', message)
+// })
 
 const start = async () => {
     try {
