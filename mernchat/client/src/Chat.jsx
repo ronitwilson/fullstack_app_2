@@ -9,6 +9,7 @@ export default function Chat() {
     const [people, setPeople] = useState({})
     const [selectedUserId, setSelectedUserId] = useState(null)
     const [message, setMessage] = useState('')
+    const [sentMessages, setSentMessages] = useState([])
     const {username, id} = useContext(UserContext)
 
     useEffect(() => {
@@ -50,6 +51,9 @@ export default function Chat() {
             recipient: selectedUserId,
             text: message
         }))
+        setMessage('')
+        setSentMessages(prev => [...prev, {text: message}])
+        console.log("sent messages are set")
     }
     const otherOnlinePeople = {...people};
     // console.log("otherOnlinePeople are ", otherOnlinePeople)
@@ -76,6 +80,16 @@ export default function Chat() {
                 <div className="flex-grow p-2"> {selectedUserId &&<span>messages with {people[selectedUserId]}</span> } 
                 {!selectedUserId && (
                     <div className="text-center text-gray-500">Select a person to chat with</div>
+                )}
+                {!! selectedUserId &&(
+                    <div>
+                        {
+                            sentMessages.map((messages,index) => (
+                                
+                                <div key={index}>{messages.text}</div>
+                            ))
+                        }
+                    </div>
                 )}
             </div>
                 {!! selectedUserId && (
