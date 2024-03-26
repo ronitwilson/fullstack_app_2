@@ -38,7 +38,7 @@ export default function Chat() {
             }
             else{
                 console.log("other message data is ", messageData)
-            
+                setSentMessages(prev => [...prev, {text: messageData.text, is_our: false}])
             }
         }
         
@@ -52,8 +52,7 @@ export default function Chat() {
             text: message
         }))
         setMessage('')
-        setSentMessages(prev => [...prev, {text: message}])
-        console.log("sent messages are set")
+        setSentMessages(prev => [...prev, {text: message, is_our: true}])
     }
     const otherOnlinePeople = {...people};
     // console.log("otherOnlinePeople are ", otherOnlinePeople)
