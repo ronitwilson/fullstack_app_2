@@ -32,12 +32,11 @@ export default function Chat() {
 
         function handleWsMessage(ev) {
             const messageData = JSON.parse(ev.data)
-            console.log("ws connection message ", messageData)
+            console.log({ev, messageData})
             if ('online' in messageData) {
                 showOnlinePeople(messageData.online)
             }
             else{
-                console.log("other message data is ", messageData)
                 setSentMessages(prev => [...prev, {text: messageData.text, is_our: false}])
             }
         }

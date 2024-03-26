@@ -2,12 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const connectDB = require('./db/connect');
-// const User = require('./models/User');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const registerAndlogin = require('./router/registerAndLogin');
 const ws = require('ws');
+const MessagesDb = require('./models/messages');
 
 
 const app = express()
@@ -66,23 +66,21 @@ wss.on('connection', (connection, req) => {
       }
     })
   }
-  connection.on('message', (message) => {
+  connection.on('message', async (message) => {
     message = JSON.parse(message.toString())
     console.log('message is ', message)
     const {recipient, text} = message;
+    const message_doc = await MessagesDb.create({sender: connection.userId, recipient, text})
+    // console.log('message_doc is ', message_doc)
+    // notify when someone comments
     if(recipient && text) {
       [...wss.clients].filter(client => client.userId === recipient)
       .forEach(client => {
         client.send(JSON.stringify({text}))
       })
     }
-    // wss.clients.forEach(client => {
-    //   if(client !== connection) {
-    //     client.send(message);
-    //   }
-    // })
   });
-  // notify when someone comments
+  // notify when someone online
   [...wss.clients].forEach(client => {
     client.send(JSON.stringify({online:   [...wss.clients].map(c => ({userId: c.userId, username : c.username}))}))
   });
