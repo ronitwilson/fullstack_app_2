@@ -70,13 +70,13 @@ wss.on('connection', (connection, req) => {
     message = JSON.parse(message.toString())
     console.log('message is ', message)
     const {recipient, text} = message;
-    const message_doc = await MessagesDb.create({sender: connection.userId, recipient, text})
+    const messageDocu = await MessagesDb.create({sender: connection.userId, recipient, text})
     // console.log('message_doc is ', message_doc)
     // notify when someone comments
     if(recipient && text) {
       [...wss.clients].filter(client => client.userId === recipient)
       .forEach(client => {
-        client.send(JSON.stringify({text}))
+        client.send(JSON.stringify({text, sender: connection.userId, id: messageDocu._id}))
       })
     }
   });
