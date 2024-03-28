@@ -76,7 +76,7 @@ wss.on('connection', (connection, req) => {
     if(recipient && text) {
       [...wss.clients].filter(client => client.userId === recipient)
       .forEach(client => {
-        client.send(JSON.stringify({text}))
+        client.send(JSON.stringify({text, sender: connection.userId, id: message_doc._id}))
       })
     }
   });

@@ -36,8 +36,8 @@ export default function Chat() {
             if ('online' in messageData) {
                 showOnlinePeople(messageData.online)
             }
-            else{
-                setSentMessages(prev => [...prev, {text: messageData.text, is_our: false}])
+            else if('text' in messageData){
+                setSentMessages(prev => [...prev, {text: messageData.text, is_our: false, id: messageData.id}])
             }
         }
         
@@ -56,6 +56,11 @@ export default function Chat() {
     const otherOnlinePeople = {...people};
     // console.log("otherOnlinePeople are ", otherOnlinePeople)
     delete otherOnlinePeople[id];
+
+    const removeDuplicateMessages  = sentMessages.filter((message, index, self) => {
+        // filter for unique messages based on message.id
+
+    })
     return(
         <div className="flex h-screen">
             <div className="bg-blue-80 w-1/3">
