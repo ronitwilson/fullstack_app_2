@@ -39,7 +39,7 @@ export default function Chat() {
                 showOnlinePeople(messageData.online)
             }
             else if('text' in messageData){
-                setSentMessages(prev => [...prev, {text: messageData.text, is_our: false, id: messageData.id, sender: id, recipient:  messageData.id}])
+                setSentMessages(prev => [...prev, {text: messageData.text, is_our: false, id: messageData.id, sender: messageData.sender, recipient:  id}])
             }
         }
         
@@ -88,7 +88,7 @@ export default function Chat() {
                         {
                             removeDuplicateMessages.map((messages,index) => (
                                 
-                                <div key={index}>
+                                <div key={index} className={" "+ (messages.sender === id ? 'bg-blue-500 text-white': 'bg-white text-gray-500')}>
                                     Sender id :{messages.sender } <br/>
                                     Recipient id : {messages.recipient} <br/>
                                     text {messages.text}
