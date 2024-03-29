@@ -12,7 +12,7 @@ export function UserContextProvider({children}) {
         axios.get('/profile').then(response => {
             console.log("username is ", response.data)
             console.log("username is ", response.data.decoded.username)
-            setId(response.data.decoded.id)
+            setId(response.data.decoded.userId)
             setUsername(response.data.decoded.username)
         });
     }, [])

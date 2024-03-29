@@ -89,7 +89,9 @@ export default function Chat() {
                             removeDuplicateMessages.map((messages,index) => (
                                 
                                 <div key={index}>
-                                    {messages.sender === id ? "ME: ": ''}{messages.text}
+                                    Sender id :{messages.sender } <br/>
+                                    Recipient id : {messages.recipient} <br/>
+                                    text {messages.text}
                                 </div>
                             ))
                         }
