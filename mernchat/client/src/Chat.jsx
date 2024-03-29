@@ -3,6 +3,8 @@ import { useEffect } from "react"
 import  Avatar from "./Avatar"
 import { UserContext } from './UserContext'
 import { useContext } from 'react'
+import {uniqBy} from 'lodash'
+
 
 export default function Chat() {
     const [ws, setWs] = useState(null)
@@ -57,10 +59,7 @@ export default function Chat() {
     // console.log("otherOnlinePeople are ", otherOnlinePeople)
     delete otherOnlinePeople[id];
 
-    const removeDuplicateMessages  = sentMessages.filter((message, index, self) => {
-        // filter for unique messages based on message.id
-
-    })
+    const removeDuplicateMessages  =  uniqBy(sentMessages, 'id')
     return(
         <div className="flex h-screen">
             <div className="bg-blue-80 w-1/3">
@@ -87,7 +86,7 @@ export default function Chat() {
                 {!! selectedUserId &&(
                     <div>
                         {
-                            sentMessages.map((messages,index) => (
+                            removeDuplicateMessages.map((messages,index) => (
                                 
                                 <div key={index}>{messages.text}</div>
                             ))
