@@ -39,7 +39,7 @@ export default function Chat() {
                 showOnlinePeople(messageData.online)
             }
             else if('text' in messageData){
-                setSentMessages(prev => [...prev, {text: messageData.text, is_our: false, id: messageData.id}])
+                setSentMessages(prev => [...prev, {text: messageData.text, is_our: false, id: messageData.id, sender: id, recipient:  messageData.id}])
             }
         }
         
@@ -53,7 +53,7 @@ export default function Chat() {
             text: message
         }))
         setMessage('')
-        setSentMessages(prev => [...prev, {text: message, is_our: true}])
+        setSentMessages(prev => [...prev, {text: message, is_our: true, id: Math.random(), sender: id, recipient: selectedUserId}])
     }
     const otherOnlinePeople = {...people};
     // console.log("otherOnlinePeople are ", otherOnlinePeople)
@@ -79,7 +79,7 @@ export default function Chat() {
                 }
             </div>
             <div className="flex flex-col bg-blue-200 w-2/3">
-                <div className="flex-grow p-2"> {selectedUserId &&<span>messages with {people[selectedUserId]}</span> } 
+                <div className="flex-grow p-2"> 
                 {!selectedUserId && (
                     <div className="text-center text-gray-500">Select a person to chat with</div>
                 )}
@@ -88,7 +88,9 @@ export default function Chat() {
                         {
                             removeDuplicateMessages.map((messages,index) => (
                                 
-                                <div key={index}>{messages.text}</div>
+                                <div key={index}>
+                                    {messages.sender === id ? "ME: ": ''}{messages.text}
+                                </div>
                             ))
                         }
                     </div>
