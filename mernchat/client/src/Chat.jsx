@@ -3,6 +3,8 @@ import { useEffect } from "react"
 import  Avatar from "./Avatar"
 import { UserContext } from './UserContext'
 import { useContext } from 'react'
+import {uniqBy} from 'lodash'
+
 
 export default function Chat() {
     const [ws, setWs] = useState(null)
@@ -36,8 +38,8 @@ export default function Chat() {
             if ('online' in messageData) {
                 showOnlinePeople(messageData.online)
             }
-            else{
-                setSentMessages(prev => [...prev, {text: messageData.text, is_our: false}])
+            else if('text' in messageData){
+                setSentMessages(prev => [...prev, {text: messageData.text, is_our: false, id: messageData.id, sender: messageData.sender, recipient:  id}])
             }
         }
         
@@ -51,11 +53,13 @@ export default function Chat() {
             text: message
         }))
         setMessage('')
-        setSentMessages(prev => [...prev, {text: message, is_our: true}])
+        setSentMessages(prev => [...prev, {text: message, is_our: true, id: Math.random(), sender: id, recipient: selectedUserId}])
     }
     const otherOnlinePeople = {...people};
     // console.log("otherOnlinePeople are ", otherOnlinePeople)
     delete otherOnlinePeople[id];
+
+    const removeDuplicateMessages  =  uniqBy(sentMessages, 'id')
     return(
         <div className="flex h-screen">
             <div className="bg-blue-80 w-1/3">
@@ -75,16 +79,21 @@ export default function Chat() {
                 }
             </div>
             <div className="flex flex-col bg-blue-200 w-2/3">
-                <div className="flex-grow p-2"> {selectedUserId &&<span>messages with {people[selectedUserId]}</span> } 
+                <div className="flex-grow p-2"> 
                 {!selectedUserId && (
                     <div className="text-center text-gray-500">Select a person to chat with</div>
                 )}
                 {!! selectedUserId &&(
-                    <div>
+                    <div className="overflow-y-scroll">
                         {
-                            sentMessages.map((messages,index) => (
-                                
-                                <div key={index}>{messages.text}</div>
+                            removeDuplicateMessages.map((messages,index) => (
+                                <div key={index} className={messages.sender === id ? 'text-right': 'text-left'}>
+                                    <div key={index} className={"inline-block p-2 my-2 rounded-md text-sm "+ (messages.sender === id ? 'bg-blue-500 text-white': 'bg-white text-gray-500')}>
+                                        Sender id :{messages.sender } <br/>
+                                        Recipient id : {messages.recipient} <br/>
+                                        text {messages.text}
+                                    </div>
+                                </div>
                             ))
                         }
                     </div>

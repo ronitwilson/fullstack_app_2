@@ -15,3 +15,6 @@ we send message from backend to the requested user
 ## what is needed
 send that message through web socket to the right user id
 send the msg and userid to backend,  in backend fwd message to the right guy
+
+
+display sender(self) messages and reciver messages in the ui
