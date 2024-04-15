@@ -18,3 +18,12 @@ send the msg and userid to backend,  in backend fwd message to the right guy
 
 
 display sender(self) messages and reciver messages in the ui
+
+what is needed to init the messages from the db
+readFromDb function 
+get the array
+send it through rest api
+populate the state variable
+
+readFromDb function 
+get token from the req header

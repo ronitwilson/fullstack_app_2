@@ -4,6 +4,7 @@ import  Avatar from "./Avatar"
 import { UserContext } from './UserContext'
 import { useContext } from 'react'
 import {uniqBy} from 'lodash'
+import axios from 'axios'                              
 
 
 export default function Chat() {
@@ -63,6 +64,16 @@ export default function Chat() {
                 div.scrollIntoView({behavior: 'smooth'})
             }
         }, [sentMessages])
+
+    useEffect(( ) => {        
+        if (selectedUserId) {
+            const url = '/messages/' + selectedUserId
+             axios.get(url).then(response => {
+                console.log("response is ", response)
+                // setSentMessages(response.data)
+            })
+        }
+    }, [selectedUserId])
 
     const otherOnlinePeople = {...people};
     // console.log("otherOnlinePeople are ", otherOnlinePeople)

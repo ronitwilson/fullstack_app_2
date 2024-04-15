@@ -43,6 +43,13 @@ app.get('/', (req, res) => {
   // console.log('get route')
   res.send('Hello World!')
 })
+
+app.get('/messages/:userId', (req, res) => {
+  console.log('get messages route')
+  const userId = req.params.userId;
+  console.log('userId is ', userId)
+})
+
 app.use("/", registerAndlogin);
 
 const server = app.listen(port, () => {
