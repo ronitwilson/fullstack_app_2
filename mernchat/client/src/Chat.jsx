@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { useEffect } from "react"
 import  Avatar from "./Avatar"
 import { UserContext } from './UserContext'
@@ -13,6 +13,7 @@ export default function Chat() {
     const [message, setMessage] = useState('')
     const [sentMessages, setSentMessages] = useState([])
     const {username, id} = useContext(UserContext)
+    const divUnderMessages = useRef();
 
     useEffect(() => {
         const ws = new WebSocket("ws://localhost:3000")
@@ -55,6 +56,14 @@ export default function Chat() {
         setMessage('')
         setSentMessages(prev => [...prev, {text: message, is_our: true, id: Math.random(), sender: id, recipient: selectedUserId}])
     }
+
+    useEffect(( ) => {        
+            const div = divUnderMessages.current;
+            if (div) {
+                div.scrollIntoView({behavior: 'smooth'})
+            }
+        }, [sentMessages])
+
     const otherOnlinePeople = {...people};
     // console.log("otherOnlinePeople are ", otherOnlinePeople)
     delete otherOnlinePeople[id];
@@ -84,19 +93,23 @@ export default function Chat() {
                     <div className="text-center text-gray-500">Select a person to chat with</div>
                 )}
                 {!! selectedUserId &&(
-                    <div className="overflow-y-scroll">
-                        {
-                            removeDuplicateMessages.map((messages,index) => (
-                                <div key={index} className={messages.sender === id ? 'text-right': 'text-left'}>
-                                    <div key={index} className={"inline-block p-2 my-2 rounded-md text-sm "+ (messages.sender === id ? 'bg-blue-500 text-white': 'bg-white text-gray-500')}>
-                                        Sender id :{messages.sender } <br/>
-                                        Recipient id : {messages.recipient} <br/>
-                                        text {messages.text}
+                    <div className="relative h-full mb-4">
+                        <div className="overflow-y-scroll absolute inset-0">
+                            {
+                                removeDuplicateMessages.map((messages,index) => (
+                                    <div key={index} className={messages.sender === id ? 'text-right': 'text-left'}>
+                                        <div key={index} className={"inline-block p-2 my-2 rounded-md text-sm "+ (messages.sender === id ? 'bg-blue-500 text-white': 'bg-white text-gray-500')}>
+                                            Sender id :{messages.sender } <br/>
+                                            Recipient id : {messages.recipient} <br/>
+                                            text {messages.text}
+                                        </div>
                                     </div>
-                                </div>
-                            ))
-                        }
+                                ))
+                            }
+                            <div ref={divUnderMessages}></div>
+                        </div>
                     </div>
+
                 )}
             </div>
                 {!! selectedUserId && (
