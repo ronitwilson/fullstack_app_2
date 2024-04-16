@@ -17,36 +17,38 @@ export default function Chat() {
     const divUnderMessages = useRef();
 
     useEffect(() => {
+        connectToWs()
+        }, []);
+
+    function connectToWs() {
         const ws = new WebSocket("ws://localhost:3000")
         setWs(ws)
-
         ws.addEventListener('message',handleWsMessage)
-        
-        function showOnlinePeople(peopleArray) {
-            const people = {}
-            if (!peopleArray) {
-                return
-            }
-            peopleArray.forEach(({userId, username}) => {
-                people[userId] = username
-            });
-            console.log("people are ", people)
-            setPeople(people)
+        ws.addEventListener('close', connectToWs)
+    }
+    function showOnlinePeople(peopleArray) {
+        const people = {}
+        if (!peopleArray) {
+            return
         }
+        peopleArray.forEach(({userId, username}) => {
+            people[userId] = username
+        });
+        console.log("people are ", people)
+        setPeople(people)
+    }
 
-        function handleWsMessage(ev) {
-            const messageData = JSON.parse(ev.data)
-            console.log({ev, messageData})
-            if ('online' in messageData) {
-                showOnlinePeople(messageData.online)
-            }
-            else if('text' in messageData){
-                setSentMessages(prev => [...prev, {text: messageData.text, is_our: false, id: messageData.id, sender: messageData.sender, recipient:  id}])
-            }
+    function handleWsMessage(ev) {
+        const messageData = JSON.parse(ev.data)
+        console.log({ev, messageData})
+        if ('online' in messageData) {
+            showOnlinePeople(messageData.online)
         }
+        else if('text' in messageData){
+            setSentMessages(prev => [...prev, {text: messageData.text, is_our: false, id: messageData.id, sender: messageData.sender, recipient:  id}])
+        }
+    }
         
-    }, [])
-
     function sendMessage(ev) {
         ev.preventDefault()
         console.log(" !!message is " ,message)
@@ -69,12 +71,14 @@ export default function Chat() {
         if (selectedUserId) {
             const url = '/messages/' + selectedUserId
              axios.get(url).then(response => {
-                console.log("response is ", response)
-                // setSentMessages(response.data)
+                console.log("response is ", response.data)
+            // setSentMessages(response.data)
+            setSentMessages(prev => [...prev, ...response.data])
             })
         }
     }, [selectedUserId])
 
+    
     const otherOnlinePeople = {...people};
     // console.log("otherOnlinePeople are ", otherOnlinePeople)
     delete otherOnlinePeople[id];

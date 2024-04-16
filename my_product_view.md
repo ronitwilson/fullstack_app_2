@@ -27,3 +27,5 @@ populate the state variable
 
 readFromDb function 
 get token from the req header
+
+# make a auto reconnect function
