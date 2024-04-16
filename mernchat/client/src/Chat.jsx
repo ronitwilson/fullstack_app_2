@@ -73,7 +73,12 @@ export default function Chat() {
              axios.get(url).then(response => {
                 console.log("response is ", response.data)
             // setSentMessages(response.data)
-            setSentMessages(prev => [...prev, ...response.data])
+            const formatedMessages = response.data.map(message => {
+            let newObj = {...message, id: message._id}
+            delete newObj._id
+            return newObj
+            })  
+            setSentMessages(prev => [...prev, ...formatedMessages])
             })
         }
     }, [selectedUserId])

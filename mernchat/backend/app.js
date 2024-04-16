@@ -72,7 +72,7 @@ app.get('/messages/:userId', async (req, res) => {
       // sender: {$in: [userId, ourUserId]},
       // recipient: {$in: [userId, ourUserId]}
 
-    }).sort({createdAt: -1}).then(messages => {
+    }).sort({createdAt: 1}).then(messages => {
       res.json(messages)
     })
 })
