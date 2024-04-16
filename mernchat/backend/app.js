@@ -59,11 +59,22 @@ app.get('/', (req, res) => {
 })
 
 app.get('/messages/:userId', async (req, res) => {
-  console.log('get messages route')
   const userId = req.params.userId;
-  console.log('userId is ', userId)
-  const otherUserId = await getUserIdFromToken(req.cookies.token);
-  console.log('otherUserId is ', otherUserId)
+  const ourUserId = await getUserIdFromToken(req.cookies.token);
+  // console.log('otherUserId is ', otherUserId)
+  MessagesDb.find(
+    {
+      $or: [
+        {sender: userId, recipient: ourUserId},
+        {sender: ourUserId, recipient: userId}
+      ]
+      // alternative querry
+      // sender: {$in: [userId, ourUserId]},
+      // recipient: {$in: [userId, ourUserId]}
+
+    }).sort({createdAt: -1}).then(messages => {
+      res.json(messages)
+    })
 })
 
 app.use("/", registerAndlogin);
