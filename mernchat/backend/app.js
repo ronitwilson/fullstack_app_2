@@ -39,15 +39,31 @@ app.get('/profile', async (req, res) => {
 })
 })
 
+const getUserIdFromToken = async (token) => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, userDetails) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(userDetails.userId)
+      }
+    })
+  })
+}
+
+
+
 app.get('/', (req, res) => {
   // console.log('get route')
   res.send('Hello World!')
 })
 
-app.get('/messages/:userId', (req, res) => {
+app.get('/messages/:userId', async (req, res) => {
   console.log('get messages route')
   const userId = req.params.userId;
   console.log('userId is ', userId)
+  const otherUserId = await getUserIdFromToken(req.cookies.token);
+  console.log('otherUserId is ', otherUserId)
 })
 
 app.use("/", registerAndlogin);
