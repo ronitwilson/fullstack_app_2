@@ -119,8 +119,6 @@ export default function Chat() {
                                 removeDuplicateMessages.map((messages,index) => (
                                     <div key={index} className={messages.sender === id ? 'text-right': 'text-left'}>
                                         <div key={index} className={"inline-block p-2 my-2 rounded-md text-sm "+ (messages.sender === id ? 'bg-blue-500 text-white': 'bg-white text-gray-500')}>
-                                            Sender id :{messages.sender } <br/>
-                                            Recipient id : {messages.recipient} <br/>
                                             text {messages.text}
                                         </div>
                                     </div>
