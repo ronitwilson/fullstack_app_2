@@ -29,3 +29,9 @@ readFromDb function
 get token from the req header
 
 # make a auto reconnect function
+
+# show offline people
+* make the dot with the green
+* make a route to get all users 
+* filter out self user and online users
+* make a dot with grey for offline users

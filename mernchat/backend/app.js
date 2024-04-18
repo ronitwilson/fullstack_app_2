@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const registerAndlogin = require('./router/registerAndLogin');
 const ws = require('ws');
 const MessagesDb = require('./models/messages');
+const UserModel = require('./models/User');
 
 
 const app = express()
@@ -77,6 +78,13 @@ app.get('/messages/:userId', async (req, res) => {
     })
 })
 
+app.get('/userList', async (req, res) => {
+  const usersList = await UserModel.find({}, { _id: 1, username: 1 })
+  // console.log('usersList is ', usersList)
+  console.log('debug is ', usersList[0]._id.toString())
+  res.json(usersList)
+})
+
 app.use("/", registerAndlogin);
 
 const server = app.listen(port, () => {
@@ -116,6 +124,7 @@ wss.on('connection', (connection, req) => {
   });
   // notify when someone online
   [...wss.clients].forEach(client => {
+    // If the body starts with an expression and not with a { is seen as a value to be returned.
     client.send(JSON.stringify({online:   [...wss.clients].map(c => ({userId: c.userId, username : c.username}))}))
   });
   // console.log([...wss.clients].map(c => c.username))

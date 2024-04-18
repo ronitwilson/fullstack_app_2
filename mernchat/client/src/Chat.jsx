@@ -18,6 +18,7 @@ export default function Chat() {
 
     useEffect(() => {
         connectToWs()
+        getOfflinePeople()
         }, []);
 
     function connectToWs() {
@@ -26,6 +27,13 @@ export default function Chat() {
         ws.addEventListener('message',handleWsMessage)
         ws.addEventListener('close', connectToWs)
     }
+
+    function getOfflinePeople() {
+        axios.get('/userList').then(response => {
+            console.log("offline people are ", response.data)
+        })
+    }
+
     function showOnlinePeople(peopleArray) {
         const people = {}
         if (!peopleArray) {
