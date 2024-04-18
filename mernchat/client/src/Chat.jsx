@@ -18,7 +18,6 @@ export default function Chat() {
 
     useEffect(() => {
         connectToWs()
-        getOfflinePeople()
         }, []);
 
     function connectToWs() {
@@ -28,11 +27,18 @@ export default function Chat() {
         ws.addEventListener('close', connectToWs)
     }
 
-    function getOfflinePeople() {
+    useEffect(() => {
         axios.get('/userList').then(response => {
-            console.log("offline people are ", response.data)
+            // console.log("offline people are ", response.data)
+            const peopleList = response.data
+            const offlinePoeple = peopleList
+                .filter(user => user._id !== id)
+                .filter(user => Object.keys(people).indexOf(user._id) === -1)
+            console.log("offline people are ", offlinePoeple)
+
         })
-    }
+    }, [people]);
+
 
     function showOnlinePeople(peopleArray) {
         const people = {}
@@ -44,6 +50,7 @@ export default function Chat() {
         });
         console.log("people are ", people)
         setPeople(people)
+        // getOfflinePeople()
     }
 
     function handleWsMessage(ev) {
@@ -67,6 +74,7 @@ export default function Chat() {
         setMessage('')
         setSentMessages(prev => [...prev, {text: message, is_our: true, id: Math.random(), sender: id, recipient: selectedUserId}])
     }
+
 
     useEffect(( ) => {        
             const div = divUnderMessages.current;
