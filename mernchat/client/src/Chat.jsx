@@ -10,6 +10,7 @@ import axios from 'axios'
 export default function Chat() {
     const [ws, setWs] = useState(null)
     const [people, setPeople] = useState({})
+    const [offlinePeople, setOfflinePeople] = useState({})
     const [selectedUserId, setSelectedUserId] = useState(null)
     const [message, setMessage] = useState('')
     const [sentMessages, setSentMessages] = useState([])
@@ -31,11 +32,16 @@ export default function Chat() {
         axios.get('/userList').then(response => {
             // console.log("offline people are ", response.data)
             const peopleList = response.data
-            const offlinePoeple = peopleList
+            const offlinePoepleArr = peopleList
                 .filter(user => user._id !== id)
                 .filter(user => Object.keys(people).indexOf(user._id) === -1)
-            console.log("offline people are ", offlinePoeple)
-
+            // console.log("offline people are ", offlinePoepleArr)
+            const offlinePeople = {}
+            offlinePoepleArr.forEach(user => {
+                offlinePeople[user._id] = user.username
+            })
+            setOfflinePeople(offlinePeople)
+            console.log("offline people are ", offlinePeople)
         })
     }, [people]);
 
