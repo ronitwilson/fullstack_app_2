@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import Contact from "./Contact"
 import { UserContext } from './UserContext'
 import { useContext } from 'react'
-import {uniqBy} from 'lodash'
+import {set, uniqBy} from 'lodash'
 import axios from 'axios'                              
 
 
@@ -14,7 +14,7 @@ export default function Chat() {
     const [selectedUserId, setSelectedUserId] = useState(null)
     const [message, setMessage] = useState('')
     const [sentMessages, setSentMessages] = useState([])
-    const {username, id} = useContext(UserContext)
+    const {username, setUsername, id, setId} = useContext(UserContext)
     const divUnderMessages = useRef();
 
     useEffect(() => {
@@ -45,6 +45,15 @@ export default function Chat() {
         })
     }, [people]);
 
+
+    function logout() {
+        axios.post('/logout').then(response => {
+            ws.close()
+            setWs(null)
+            setUsername(null)
+            setId(null)
+            console.log("response is ", response.data)})
+        }
 
     function showOnlinePeople(peopleArray) {
         const people = {}
@@ -113,7 +122,8 @@ export default function Chat() {
     const removeDuplicateMessages  =  uniqBy(sentMessages, 'id')
     return(
         <div className="flex h-screen">
-            <div className="bg-blue-80 w-1/3">
+            <div className="bg-blue-80 w-1/3 flex flex-col">
+                <div className="flex-grow">
                 <div className="text-blue-600 font-bold">MernChat</div>
                 {
                 Object.keys(otherOnlinePeople).map(userId => (
@@ -133,6 +143,12 @@ export default function Chat() {
                      key={userId}/>
                 ))
                 }
+                </div>
+            <div className="p-2 text-center">
+                <span className="text-gray-500 m-2 ">Logged in as {username}</span>
+                <button onClick={logout} className="bg-blue-500 text-white p-2 rounded-sm">Logout</button>
+            </div> 
+
             </div>
             <div className="flex flex-col bg-blue-200 w-2/3">
                 <div className="flex-grow p-2"> 

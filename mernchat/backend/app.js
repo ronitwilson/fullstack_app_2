@@ -85,6 +85,11 @@ app.get('/userList', async (req, res) => {
   res.json(usersList)
 })
 
+app.post('/logout', async (req, res) => {
+  const token = await jwt.sign({userId:'', username: ''}, process.env.JWT_SECRET)
+  res.cookie('token', token, {sameSite:'none',secure:true}).status(201).json({id: ''});
+})
+
 app.use("/", registerAndlogin);
 
 const server = app.listen(port, () => {
