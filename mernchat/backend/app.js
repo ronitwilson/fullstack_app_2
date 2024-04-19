@@ -81,7 +81,7 @@ app.get('/messages/:userId', async (req, res) => {
 app.get('/userList', async (req, res) => {
   const usersList = await UserModel.find({}, { _id: 1, username: 1 })
   // console.log('usersList is ', usersList)
-  console.log('debug is ', usersList[0]._id.toString())
+  // console.log('debug is ', usersList[0]._id.toString())
   res.json(usersList)
 })
 
@@ -95,6 +95,14 @@ const wss = new ws.WebSocketServer({ server });
 // console.log('wss is ', wss)
 wss.on('connection', (connection, req) => {
   const cookies = req.headers.cookie;
+
+  connection.on('close', () => {
+    console.log('A connection was closed');
+    [...wss.clients].forEach(client => {
+      // If the body starts with an expression and not with a { is seen as a value to be returned.
+      client.send(JSON.stringify({online:   [...wss.clients].map(c => ({userId: c.userId, username : c.username}))}))
+    });
+  });
 
   // read user name and pwd
   if (cookies) {

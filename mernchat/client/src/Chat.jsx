@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react"
 import { useEffect } from "react"
-import  Avatar from "./Avatar"
+import Contact from "./Contact"
 import { UserContext } from './UserContext'
 import { useContext } from 'react'
 import {uniqBy} from 'lodash'
@@ -117,15 +117,20 @@ export default function Chat() {
                 <div className="text-blue-600 font-bold">MernChat</div>
                 {
                 Object.keys(otherOnlinePeople).map(userId => (
-                    <div onClick={() => setSelectedUserId(userId)} key={userId} className={"border-b border-gray-100 flex items-center gap-2 " + (userId === selectedUserId ? 'bg-blue-100': '')}>
-                        {userId === selectedUserId && (
-                            <div className="bg-blue-500 w-1 h-12 "></div>
-                        )}
-                        <div className="flex gap-2 py-2 pl-4 items-center ">
-                        <Avatar username={people[userId]} userId={userId}/>
-                        <span>{people[userId]}</span>
-                        </div>
-                        </div>
+                    <Contact id={userId}
+                     username={otherOnlinePeople[userId]} 
+                     onClick={()=> setSelectedUserId(userId)}
+                     selectedUserId={selectedUserId}
+                     online={true}
+                     key={userId}/>
+                ))}{
+                Object.keys(offlinePeople).map(userId => (
+                    <Contact id={userId}
+                     username={offlinePeople[userId]} 
+                     onClick={()=> setSelectedUserId(userId)}
+                     selectedUserId={selectedUserId}
+                     online={false}
+                     key={userId}/>
                 ))
                 }
             </div>
