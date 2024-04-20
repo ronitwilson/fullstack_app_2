@@ -9,6 +9,7 @@ const registerAndlogin = require('./router/registerAndLogin');
 const ws = require('ws');
 const MessagesDb = require('./models/messages');
 const UserModel = require('./models/User');
+const fs = require('fs');
 
 
 const app = express()
@@ -127,7 +128,15 @@ wss.on('connection', (connection, req) => {
     console.log('message is ', message)
     const {recipient, text, file} = message;
     if(file) {
-      // console.log('file is ', file)
+      const fileparts = file.name.split('.');
+      const extension = fileparts[fileparts.length - 1];
+      const filename = Date.now() + '.' + extension;
+      const path = __dirname + '/uploads/' + filename;
+      const fileBuffer = new Buffer.from(file.data.split(",")[1], 'base64');
+      fs.writeFile(path, fileBuffer, (err) => {
+        console.log('file is saved')
+      })
+      console.log('file name is ', file.name)
     }
     const messageDocu = await MessagesDb.create({sender: connection.userId, recipient, text})
     // console.log('message_doc is ', message_doc)
