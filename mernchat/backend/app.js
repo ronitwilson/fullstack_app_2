@@ -103,6 +103,7 @@ wss.on('connection', (connection, req) => {
 
   connection.on('close', () => {
     console.log('A connection was closed');
+    // connection.terminate();
     [...wss.clients].forEach(client => {
       // If the body starts with an expression and not with a { is seen as a value to be returned.
       client.send(JSON.stringify({online:   [...wss.clients].map(c => ({userId: c.userId, username : c.username}))}))

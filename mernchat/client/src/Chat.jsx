@@ -48,7 +48,7 @@ export default function Chat() {
 
     function logout() {
         axios.post('/logout').then(response => {
-            ws.close()
+            // ws.close()
             setWs(null)
             setUsername(null)
             setId(null)
@@ -86,8 +86,8 @@ export default function Chat() {
             recipient: selectedUserId,
             text: message
         }))
-        setMessage('')
         setSentMessages(prev => [...prev, {text: message, is_our: true, id: Math.random(), sender: id, recipient: selectedUserId}])
+        setMessage('')
     }
 
 
@@ -162,7 +162,7 @@ export default function Chat() {
                                 removeDuplicateMessages.map((messages,index) => (
                                     <div key={index} className={messages.sender === id ? 'text-right': 'text-left'}>
                                         <div key={index} className={"inline-block p-2 my-2 rounded-md text-sm "+ (messages.sender === id ? 'bg-blue-500 text-white': 'bg-white text-gray-500')}>
-                                            text {messages.text}
+                                            {messages.text}
                                         </div>
                                     </div>
                                 ))
@@ -179,6 +179,11 @@ export default function Chat() {
                     onChange={ev => {setMessage(ev.target.value)}}
                     placeholder="type a message" 
                     className="bg-white border p-2 flex-grow rounded-sm" />
+                    <button type="button" className="bg-blue-500 p-2 m-2 text-white rounded-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                    </svg>
+                    </button>
                     <button type="submit" className="bg-blue-500 p-2 m-2 text-white rounded-sm">Send</button>
                 </form>  
                 )}
