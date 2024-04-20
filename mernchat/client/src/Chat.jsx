@@ -88,8 +88,14 @@ export default function Chat() {
             text: message,
             file
         }))
-        setSentMessages(prev => [...prev, {text: message, is_our: true, id: Math.random(), sender: id, recipient: selectedUserId}])
         setMessage('')
+        setSentMessages(prev => [...prev, {text: message, is_our: true, id: Math.random(), sender: id, recipient: selectedUserId}])
+        if(file) {  
+            const url = '/messages/' + selectedUserId
+            axios.get(url).then(response => {
+               console.log("response is ", response.data)
+          })
+        }
     }
 
 
@@ -177,6 +183,11 @@ export default function Chat() {
                                     <div key={index} className={messages.sender === id ? 'text-right': 'text-left'}>
                                         <div key={index} className={"inline-block p-2 my-2 rounded-md text-sm "+ (messages.sender === id ? 'bg-blue-500 text-white': 'bg-white text-gray-500')}>
                                             {messages.text}
+                                            {messages.file && (
+                                                <div>
+                                                    <a href={axios.defaults.baseURL + messages.file} target="_blank">{messages.file}</a>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))

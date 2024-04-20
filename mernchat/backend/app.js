@@ -14,6 +14,7 @@ const fs = require('fs');
 
 const app = express()
 const port = 3000
+app.use('/uploads', express.static(__dirname + '/uploads'))
 
 app.use(cors({
   credentials: true,
@@ -127,18 +128,20 @@ wss.on('connection', (connection, req) => {
     message = JSON.parse(message.toString())
     console.log('message is ', message)
     const {recipient, text, file} = message;
+    let filename = null
     if(file) {
       const fileparts = file.name.split('.');
       const extension = fileparts[fileparts.length - 1];
-      const filename = Date.now() + '.' + extension;
+      // const filename = Date.now() + '.' + extension;
+      filename = file.name;
       const path = __dirname + '/uploads/' + filename;
       const fileBuffer = new Buffer.from(file.data.split(",")[1], 'base64');
       fs.writeFile(path, fileBuffer, (err) => {
-        console.log('file is saved')
+        console.log('file is saved at path', path)
       })
       console.log('file name is ', file.name)
     }
-    const messageDocu = await MessagesDb.create({sender: connection.userId, recipient, text})
+    const messageDocu = await MessagesDb.create({sender: connection.userId, recipient, text, file: file? filename: null})
     // console.log('message_doc is ', message_doc)
     // notify when someone comments
     if(recipient && text) {
