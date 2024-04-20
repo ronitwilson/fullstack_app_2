@@ -79,16 +79,14 @@ export default function Chat() {
         }
     }
         
-    function sendMessage(ev) {
-        if(ev.target.type === 'file') {
-            console.log("file is ", ev.target.files[0])
-            return
+    function sendMessage(ev, file = null) {
+        if(ev) {
+            ev.preventDefault()
         }
-        ev.preventDefault()
-        console.log(" !!message is " ,message)
         ws.send(JSON.stringify({
             recipient: selectedUserId,
-            text: message
+            text: message,
+            file
         }))
         setSentMessages(prev => [...prev, {text: message, is_our: true, id: Math.random(), sender: id, recipient: selectedUserId}])
         setMessage('')
@@ -97,7 +95,14 @@ export default function Chat() {
 
     function sendFile(ev) {
         // console.log("file is ", ev.target.files[0])
-        sendMessage(ev)
+        const reader = new FileReader()
+        reader.readAsDataURL(ev.target.files[0])
+        reader.onload = () => {
+            sendMessage(null, {
+                info: ev.target.files[0],
+                data: reader.result
+            })
+        }
     }
 
     useEffect(( ) => {        

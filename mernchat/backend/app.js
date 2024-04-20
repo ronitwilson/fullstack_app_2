@@ -125,7 +125,10 @@ wss.on('connection', (connection, req) => {
   connection.on('message', async (message) => {
     message = JSON.parse(message.toString())
     console.log('message is ', message)
-    const {recipient, text} = message;
+    const {recipient, text, file} = message;
+    if(file) {
+      // console.log('file is ', file)
+    }
     const messageDocu = await MessagesDb.create({sender: connection.userId, recipient, text})
     // console.log('message_doc is ', message_doc)
     // notify when someone comments
