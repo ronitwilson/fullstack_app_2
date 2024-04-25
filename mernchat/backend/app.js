@@ -144,10 +144,10 @@ wss.on('connection', (connection, req) => {
     const messageDocu = await MessagesDb.create({sender: connection.userId, recipient, text, file: file? filename: null})
     // console.log('message_doc is ', message_doc)
     // notify when someone comments
-    if(recipient && text) {
+    if(recipient && (text || file)) {
       [...wss.clients].filter(client => client.userId === recipient)
       .forEach(client => {
-        client.send(JSON.stringify({text, sender: connection.userId, id: messageDocu._id}))
+        client.send(JSON.stringify({text, sender: connection.userId, id: messageDocu._id, file: file? filename: null}))
       })
     }
   });

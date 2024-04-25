@@ -74,8 +74,9 @@ export default function Chat() {
         if ('online' in messageData) {
             showOnlinePeople(messageData.online)
         }
-        else if('text' in messageData){
-            setSentMessages(prev => [...prev, {text: messageData.text, is_our: false, id: messageData.id, sender: messageData.sender, recipient:  id}])
+        else if('text' in messageData || 'file' in messageData){
+            console.log("messageData is ", messageData)
+            setSentMessages(prev => [...prev, {text: messageData.text, is_our: false, id: messageData.id, sender: messageData.sender, recipient:  id, file: messageData.file}])
         }
     }
         
@@ -93,7 +94,13 @@ export default function Chat() {
         if(file) {  
             const url = '/messages/' + selectedUserId
             axios.get(url).then(response => {
-               console.log("response is ", response.data)
+               const formatedMessages = response.data.map(message => {
+                let newObj = {...message, id: message._id}
+                delete newObj._id
+                return newObj
+                })
+                console.log("response messages is ", formatedMessages)
+               setSentMessages(formatedMessages)
           })
         }
     }
