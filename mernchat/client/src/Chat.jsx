@@ -184,8 +184,8 @@ export default function Chat() {
                                         <div key={index} className={"inline-block p-2 my-2 rounded-md text-sm "+ (messages.sender === id ? 'bg-blue-500 text-white': 'bg-white text-gray-500')}>
                                             {messages.text}
                                             {messages.file && (
-                                                <div>
-                                                    <a href={axios.defaults.baseURL + messages.file} target="_blank">{messages.file}</a>
+                                                <div className="flex items-center gap-1 border-b">
+                                                    <a target="_blank"   href={axios.defaults.baseURL + '/uploads/' + messages.file}>{messages.file}</a>
                                                 </div>
                                             )}
                                         </div>
